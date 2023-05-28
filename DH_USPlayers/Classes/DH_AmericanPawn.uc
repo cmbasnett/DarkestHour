@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_AmericanPawn extends DHPawn;
@@ -31,4 +31,6 @@ defaultproperties
 
     SmokeGrenadeClass=class'DH_Equipment.DH_USSmokeGrenadeWeapon'
     ColoredSmokeGrenadeClass=class'DH_Equipment.DH_RedSmokeWeapon'
+
+    HealthFigureClass=class'DH_USPlayers.DHHealthFigure_USA'
 }

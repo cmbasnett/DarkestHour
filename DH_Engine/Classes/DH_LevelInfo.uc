@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DH_LevelInfo extends ROLevelInfo
@@ -8,7 +8,8 @@ class DH_LevelInfo extends ROLevelInfo
 
 enum EAxisNation
 {
-    NATION_Germany
+    NATION_Germany,
+    NATION_Italy,
 };
 
 enum EAlliedNation
@@ -125,6 +126,8 @@ simulated function string GetTeamNationClassName(int TeamIndex)
             {
                 case NATION_Germany:
                     return "DH_GerPlayers.DHNation_Germany";
+                case NATION_Italy:
+                    return "DH_ItalyPlayers.DHNation_Italy";
                 default:
                     break;
             }

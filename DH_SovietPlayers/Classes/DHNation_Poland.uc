@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2022
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHNation_Poland extends DHNation;
@@ -30,6 +30,5 @@ defaultproperties
     DefaultSquadNames(5)="Yenisey"
     DefaultSquadNames(6)="Zvezda"
     DefaultSquadNames(7)="Iskra"
-    HealthFigureClass=class'DH_SovietPlayers.DHHealthFigure_USSR'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.Soviet_Start'
 }

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2021
+// Darklight Games (c) 2008-2023
 //==============================================================================
 
 class DHBackpack extends RODummyAttachment
@@ -16,7 +16,7 @@ simulated function PostBeginPlay()
 
     P = DHPawn(Owner);
 
-    if (P != none)
+    if (P != none && BaseBone != '')
     {
         SetBoneLocation(BaseBone, P.BackpackLocationOffset);
         SetBoneRotation(BaseBone, P.BackpackRotationOffset);
