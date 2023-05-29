@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHVehicleMG extends DHVehicleWeapon
@@ -89,21 +89,12 @@ simulated function PauseReload()
 // Have to add this here as won't get this hint from AttemptReload() as client won't call that function if MG is waiting to start a reload
 simulated function ClientSetReloadState(byte NewState)
 {
-    local DHPlayer PC;
-    local bool bMustUnbuttonToReload;
-
     super.ClientSetReloadState(NewState);
 
-    bMustUnbuttonToReload = DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).bMustUnbuttonToReload;
-
-    if (ReloadState == RL_Waiting && bMustUnbuttonToReload && !WeaponPawn.CanReload())
+    if (ReloadState == RL_Waiting && DHVehicleMGPawn(WeaponPawn) != none && DHVehicleMGPawn(WeaponPawn).bMustUnbuttonToReload
+        && !WeaponPawn.CanReload() && DHPlayer(WeaponPawn.Controller) != none)
     {
-        PC = DHPlayer(WeaponPawn.Controller);
-
-        if (PC != none)
-        {
-            PC.QueueHint(48, true);
-        }
+        DHPlayer(WeaponPawn.Controller).QueueHint(48, true);
     }
 }
 

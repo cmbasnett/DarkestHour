@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHResupplyStrategy extends Object;
@@ -13,8 +13,7 @@ enum EResupplyType
     RT_Mortars
 };
 
-var float   UpdateTime;
-var bool    bGivesExtraAmmo;
+var float UpdateTime;
 
 delegate OnPawnResupplied(Pawn P); // Called for every pawn that is resupplied
 
@@ -42,59 +41,65 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
     local DHRoleInfo RI;
     local ROWeapon recvr_weapon;
 
-    if (default.UpdateTime > TimeSeconds - recvr.LastResupplyTime)
-    {
-        return false;
-    }
-
     bResupplied = false;
 
     P = DHPawn(recvr);
-    V = Vehicle(recvr);
 
     if (P != none)
     {
-        if (CanResupplyType(SourceType, RT_Players))
-        { 
-            // Resupply weapons
-            for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+        RI = P.GetRoleInfo();
+    }
+
+    // Resupply weapons
+    if (P != none && CanResupplyType(SourceType, RT_Players))
+    {
+        for (recvr_inv = P.Inventory; recvr_inv != none; recvr_inv = recvr_inv.Inventory)
+        {
+            recvr_weapon = ROWeapon(recvr_inv);
+
+            if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
             {
-                recvr_weapon = ROWeapon(recvr_inv);
-
-                if (recvr_weapon == none || recvr_weapon.IsGrenade() || recvr_weapon.IsA('DHMortarWeapon'))
-                {
-                    continue;
-                }
-
-                bResupplied = bResupplied || recvr_weapon.FillAmmo();
+                continue;
             }
 
-            if (bGivesExtraAmmo && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo)
-            {
-                P.bUsedCarriedMGAmmo = false;
-                bResupplied = true;
-            }
+            bResupplied = bResupplied || recvr_weapon.FillAmmo();
         }
 
-        // Resupply player carrying a mortar
-        if (CanResupplyType(SourceType, RT_Mortars) && P != none)
+        if (TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime &&
+            RI != none &&
+            P.bUsedCarriedMGAmmo &&
+            P.bCarriesExtraAmmo)
         {
-            RI = P.GetRoleInfo();
-            bResupplied = bResupplied || RI != none && RI.bCanUseMortars && P.ResupplyMortarAmmunition();
+            P.bUsedCarriedMGAmmo = false;
+            bResupplied = true;
         }
     }
-    else if (V != none)
+
+    V = Vehicle(recvr);
+
+    // Resupply vehicles
+    if (V != none && CanResupplyType(SourceType, RT_Vehicles) && !V.IsA('DHMortarVehicle'))
     {
-        // Resupply vehicles
-        if (CanResupplyType(SourceType, RT_Vehicles) && !V.IsA('DHMortarVehicle'))
-        {
-            bResupplied = bResupplied || V.ResupplyAmmo();
-        }
-        else if (CanResupplyType(SourceType, RT_Mortars) && V.IsA('DHMortarVehicle'))
-        {
-            // Resupply deployed mortar
-            bResupplied = bResupplied || V.ResupplyAmmo();
-        }
+        bResupplied = bResupplied || V.ResupplyAmmo();
+    }
+
+    // Resupply deployed mortar
+    if (V != none && V.IsA('DHMortarVehicle') && CanResupplyType(SourceType, RT_Mortars))
+    {
+        bResupplied = bResupplied || V.ResupplyAmmo();
+    }
+
+    // Resupply player carrying a mortar
+    if (CanResupplyType(SourceType, RT_Mortars) &&
+        P != none &&
+        TimeSeconds - recvr.LastResupplyTime >= default.UpdateTime)
+    {
+        bResupplied = bResupplied ||
+                      (CanResupplyType(SourceType, RT_Players) && P.bUsedCarriedMGAmmo && P.bCarriesExtraAmmo) ||
+                      RI != none &&
+                      RI.bCanUseMortars &&
+                      P.ResupplyMortarAmmunition();
+        P.bUsedCarriedMGAmmo = false;
     }
 
     // Play sound if applicable
@@ -110,5 +115,4 @@ function bool HandleResupply(Pawn recvr, EResupplyType SourceType, int TimeSecon
 defaultproperties
 {
     UpdateTime=2.5
-    bGivesExtraAmmo=true
 }

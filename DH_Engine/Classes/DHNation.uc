@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHNation extends Object
@@ -42,6 +42,8 @@ var class<DHInventorySpawner>   GrenadeCrateClass;
 var string                      DefaultSquadNames[8];
 
 var Sound                       RoundStartSound;
+
+var class<DHHealthFigure>       HealthFigureClass;
 
 defaultproperties
 {

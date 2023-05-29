@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHPawn extends ROPawn
@@ -102,10 +102,9 @@ var     vector  NewAcceleration;     // acceleration which is checked by PlayerM
 var     bool    bEndMantleBob;       // initiates the pre mantle head bob up motion
 var     sound   MantleSound;
 
-// Digging
+// Diggin
 var     bool    bCanDig;
 
-// Mantling
 var(ROAnimations)   name        MantleAnim_40C, MantleAnim_44C, MantleAnim_48C, MantleAnim_52C, MantleAnim_56C, MantleAnim_60C, MantleAnim_64C,
                                 MantleAnim_68C, MantleAnim_72C, MantleAnim_76C, MantleAnim_80C, MantleAnim_84C, MantleAnim_88C;
 
@@ -133,25 +132,17 @@ var     bool                bHeadSevered; //we want heads to be able to be blown
 var     bool                bAlwaysSeverBodyparts; // implemented for zombies
 var     bool                bNeverStaggers; // disabled body part stagger effects (falling to the ground, losing stamina, etc.)
 
-// Stance
-const PRONE_FROM_CROUCH_DELAY_SECONDS = 0.2;
-var float                   LastStartCrouchTime; // Stores the last time that StartCrouch was called (used for avoiding prone eye-height bug)
-
 // Smoke grenades for squad leaders
 var int RequiredSquadMembersToReceiveSmoke;
 var int RequiredSquadMembersToReceiveColoredSmoke;
 
-// Gun Rotation
+// (not) DUMB SHIT
 var     DHATGun             GunToRotate;
 
-// Backpacks
 var     DHBackpack          Backpack;
 var     class<DHBackpack>   BackpackClass;
 var     vector              BackpackLocationOffset;
 var     rotator             BackpackRotationOffset;
-
-// Health Figure
-var     class<DHHealthFigure>   HealthFigureClass;
 
 replication
 {
@@ -619,14 +610,9 @@ simulated event AnimEnd(int Channel)
                 }
                 else
                 {
-		    // TODO: Add deployed idle empty
                     if (WA.bOutOfAmmo && WA.WA_IdleEmpty != '' && Anim != WA.WA_ReloadEmpty)
                     {
                         WA.LoopAnim(WA.WA_IdleEmpty);
-                    }
-                    else if (bBipodDeployed && WA.WA_DeployedIdle != '')
-                    {
-                        WA.LoopAnim(WA.WA_DeployedIdle);
                     }
                     else if (WA.WA_Idle != '')
                     {
@@ -5378,22 +5364,9 @@ function int LimitPitch(int Pitch, optional float DeltaTime)
     return Pitch;
 }
 
-// Returns true if the player can switch the prone state - only valid on the client.
-// Modified to fix prone eye-height bug.
+// Returns true if the player can switch the prone state - only valid on the client
 simulated function bool CanProneTransition()
 {
-    // There is a bug that only occurrs in multiplayer environments where if the player is
-    // moving and hits crouch and prone in rapid succession, the eye height will appear incorrectly.
-    // To fix this, we just ensure that we leave enough time for the stance change to propagate to the
-    // client.
-    // NOTE: Investigation seems to point to there being some native RO code that is causing this buggy
-    // behavior, as the BaseEyeHeight gets set to a specific value (CrouchHeight * CrouchMoveEyeHeightMod)
-    // without that code path ever being accessed via script.
-    if (Level.TimeSeconds - LastStartCrouchTime < PRONE_FROM_CROUCH_DELAY_SECONDS)
-    {
-        return false;
-    }
-
     //TODO: Remove PHYS_Falling.
     return (Physics == PHYS_Walking || Physics == PHYS_Falling) && !bIsMantling && (Weapon == none || Weapon.WeaponAllowProneChange());
 }
@@ -6083,13 +6056,6 @@ event StartCrouch(float HeightAdjust)
 
     // Take stamina away with each stance change
     Stamina = FMax(Stamina - (StanceChangeStaminaDrain / 2.0), 0.0);
-
-    if (IsLocallyControlled())
-    {
-        // Log the last time this function was called, as we will use this to delay
-        // a transition to prone to avoid the eye-height bug that is in native RO.
-        LastStartCrouchTime = Level.TimeSeconds;
-    }
 }
 
 // Modified to increase volume & radius of sound if sprinting, & to reduce sound radius if moving slowly
@@ -6850,36 +6816,31 @@ exec function GimmeSupplies()
     switch (GetTeamNum())
     {
         case AXIS_TEAM_INDEX:
-            SpawnVehicle("opellogi");
+            DebugSpawnVehicle("DH_OpelBlitzSupport", 5.0);
             break;
         case ALLIES_TEAM_INDEX:
-            SpawnVehicle("gmclogi");
+            DebugSpawnVehicle("DH_GMCTruckSupport", 5.0);
             break;
     }
 }
 
 // New debug exec to spawn any vehicle, in front of you
-exec function SpawnVehicle(string VehicleName, optional string VariantName)
+exec function DebugSpawnVehicle(string VehicleString, int Distance, optional int Degrees)
 {
-    local class<Vehicle>    VehicleClass;
-    local Vehicle           V;
-    local vector            SpawnLocation;
-    local rotator           SpawnDirection;
-    local int               Distance;
-    local float             Degrees;
-    local string            VehicleClassName;
-
-    VehicleClassName = class'DHVehicleRegistry'.static.GetClassNameFromVehicleName(VehicleName, VariantName);
-
-    if (VehicleClassName == "")
-    {
-        VehicleClassName = VehicleName;
-    }
+    local class<Vehicle> VehicleClass;
+    local Vehicle        V;
+    local vector         SpawnLocation;
+    local rotator        SpawnDirection;
 
     // TODO: there really is no reason why a game admin should be able to spawn vehicles in the live game & the admin 'pass through' should be removed here - Matt
-    if (VehicleClassName != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
+    if (VehicleString != "" && (IsDebugModeAllowed() || (PlayerReplicationInfo != none && (PlayerReplicationInfo.bAdmin || PlayerReplicationInfo.bSilentAdmin))))
     {
-        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleClassName, class'class'));
+        if (InStr(VehicleString, ".") == -1) // saves typing in "DH_Vehicles." in front of almost all vehicles spawned (but still allows a package name to be specified)
+        {
+            VehicleString = "DH_Vehicles." $ VehicleString;
+        }
+
+        VehicleClass = class<Vehicle>(DynamicLoadObject(VehicleString, class'class'));
 
         if (VehicleClass != none)
         {
@@ -7035,11 +6996,8 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 {
     local name FireAnim;
     local bool bIsMoving;
-    local DHWeaponAttachment WA;
 
-    WA = DHWeaponAttachment(WeaponAttachment);
-
-    if (Physics == PHYS_Swimming || WA == none)
+    if (Physics == PHYS_Swimming || WeaponAttachment == none)
     {
         return;
     }
@@ -7048,38 +7006,38 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
     if (bAltFire)
     {
-        if (WA.bBayonetAttached)
+        if (WeaponAttachment.bBayonetAttached)
         {
             if (bIsCrawling)
             {
-                FireAnim = WA.PA_ProneBayonetAltFire;
+                FireAnim = WeaponAttachment.PA_ProneBayonetAltFire;
             }
             else if (bIsCrouched)
             {
-                FireAnim = WA.PA_CrouchBayonetAltFire;
+                FireAnim = WeaponAttachment.PA_CrouchBayonetAltFire;
             }
             else
             {
-                FireAnim = WA.PA_BayonetAltFire;
+                FireAnim = WeaponAttachment.PA_BayonetAltFire;
             }
         }
         else
         {
             if (bIsCrawling)
             {
-                FireAnim = WA.PA_ProneAltFire;
+                FireAnim = WeaponAttachment.PA_ProneAltFire;
             }
             else if (bIsCrouched)
             {
-                FireAnim = WA.PA_CrouchAltFire;
+                FireAnim = WeaponAttachment.PA_CrouchAltFire;
             }
             else if (bBipodDeployed)
             {
-                FireAnim = WA.PA_DeployedAltFire;
+                FireAnim = WeaponAttachment.PA_DeployedAltFire;
             }
             else
             {
-                FireAnim = WA.PA_AltFire;
+                FireAnim = WeaponAttachment.PA_AltFire;
             }
         }
     }
@@ -7090,36 +7048,36 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
         {
             if (bIsCrouched)
             {
-                FireAnim = WA.PA_CrouchDeployedFire;
+                FireAnim = WeaponAttachment.PA_CrouchDeployedFire;
             }
             else if (bIsCrawling)
             {
-                FireAnim = WA.PA_ProneDeployedFire;
+                FireAnim = WeaponAttachment.PA_ProneDeployedFire;
             }
             else
             {
-                FireAnim = WA.PA_DeployedFire;
+                FireAnim = WeaponAttachment.PA_DeployedFire;
             }
         }
         else if (bIsCrawling)
         {
-            FireAnim = WA.PA_ProneFire;
+            FireAnim = WeaponAttachment.PA_ProneFire;
         }
         else if (bIsCrouched)
         {
             if (bIsMoving)
             {
-                FireAnim = WA.PA_MoveCrouchFire[Get8WayDirection()];
+                FireAnim = WeaponAttachment.PA_MoveCrouchFire[Get8WayDirection()];
             }
             else
             {
                 if (bIronSights)
                 {
-                    FireAnim = WA.PA_CrouchIronFire;
+                    FireAnim = WeaponAttachment.PA_CrouchIronFire;
                 }
                 else
                 {
-                    FireAnim = WA.PA_CrouchFire;
+                    FireAnim = WeaponAttachment.PA_CrouchFire;
                 }
             }
         }
@@ -7127,11 +7085,11 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
         {
             if (bIsMoving)
             {
-                FireAnim = WA.PA_MoveStandIronFire[Get8WayDirection()];
+                FireAnim = WeaponAttachment.PA_MoveStandIronFire[Get8WayDirection()];
             }
             else
             {
-                FireAnim = WA.PA_IronFire;
+                FireAnim = WeaponAttachment.PA_IronFire;
             }
         }
         else
@@ -7140,17 +7098,17 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
             {
                 if (bIsWalking)
                 {
-                    FireAnim = WA.PA_MoveWalkFire[Get8WayDirection()];
+                    FireAnim = WeaponAttachment.PA_MoveWalkFire[Get8WayDirection()];
                 }
                 else
                 {
-                    FireAnim = WA.PA_MoveStandFire[Get8WayDirection()];
+                    FireAnim = WeaponAttachment.PA_MoveStandFire[Get8WayDirection()];
 
                 }
             }
             else
             {
-                FireAnim = WA.PA_Fire;
+                FireAnim = WeaponAttachment.PA_Fire;
             }
         }
     }
@@ -7167,20 +7125,13 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
             if (!bAltFire)
             {
-                if (bBipodDeployed && WA.WA_DeployedFire != '')
+                if (WeaponAttachment.bBayonetAttached && WeaponAttachment.WA_BayonetFire != '')
                 {
-                    WA.LoopAnim(WA.WA_DeployedFire);
+                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_BayonetFire);
                 }
-                else
+                else if (WeaponAttachment.WA_Fire != '')
                 {
-                    if (WA.bBayonetAttached && WA.WA_BayonetFire != '')
-                    {
-                        WA.LoopAnim(WA.WA_BayonetFire);
-                    }
-                    else if (WA.WA_Fire != '')
-                    {
-                        WA.LoopAnim(WA.WA_Fire);
-                    }
+                    WeaponAttachment.LoopAnim(WeaponAttachment.WA_Fire);
                 }
             }
         }
@@ -7192,22 +7143,18 @@ simulated function StartFiring(bool bAltFire, bool bRapid)
 
         if (!bAltFire)
         {
-            if (bBipodDeployed && WA.WA_DeployedFire != '')
+            if (WeaponAttachment.bBayonetAttached)
             {
-                WA.PlayAnim(WA.WA_DeployedFire);
+                if (WeaponAttachment.WA_BayonetFire != '')
+                {
+                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_BayonetFire);
+                }
             }
             else
             {
-                if (WA.bBayonetAttached)
+                if (WeaponAttachment.WA_Fire != '')
                 {
-                    if (WA.WA_BayonetFire != '')
-                    {
-                        WA.PlayAnim(WA.WA_BayonetFire);
-                    }
-                }
-                else if (WA.WA_Fire != '')
-                {
-                    WA.PlayAnim(WA.WA_Fire);
+                    WeaponAttachment.PlayAnim(WeaponAttachment.WA_Fire);
                 }
             }
         }
@@ -7538,8 +7485,8 @@ defaultproperties
     DeployedPitchDownLimit=-7300
 
     // Sound
-    FootStepSoundRadius=96
-    FootstepVolume=0.75
+    FootStepSoundRadius=64
+    FootstepVolume=0.5
     QuietFootStepVolume=0.66
     SoundGroupClass=class'DH_Engine.DHPawnSoundGroup'
     MantleSound=SoundGroup'DH_Inf_Player.Mantling.Mantle'

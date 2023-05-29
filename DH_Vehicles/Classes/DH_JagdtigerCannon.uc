@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_JagdtigerCannon extends DHVehicleCannon;
@@ -29,6 +29,7 @@ defaultproperties
     CustomPitchDownLimit=64171
 
     // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_JagdtigerCannonShellHE'
 

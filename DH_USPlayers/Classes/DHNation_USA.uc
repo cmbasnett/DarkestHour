@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHNation_USA extends DHNation;
@@ -29,5 +29,6 @@ defaultproperties
     DefaultSquadNames(5)="Fox"
     DefaultSquadNames(6)="George"
     DefaultSquadNames(7)="How"
+    HealthFigureClass=class'DH_USPlayers.DHHealthFigure_USA'
     RoundStartSound= Sound'DH_SundrySounds.RoundBeginSounds.US_Start'
 }

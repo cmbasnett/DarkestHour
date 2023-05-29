@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCommandMenu_SquadLeader extends DHCommandMenu;
@@ -23,7 +23,7 @@ function Setup()
     super.Setup();
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
     local DHPawn P;
@@ -31,14 +31,14 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 
     PC = GetPlayerController();
 
-    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (PC == none || Index < 0 || Index >= Options.Length)
     {
         return;
     }
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    switch (OptionIndex)
+    switch (Index)
     {
         case 0: // Rally Point
             PC.ServerSquadSpawnRallyPoint();

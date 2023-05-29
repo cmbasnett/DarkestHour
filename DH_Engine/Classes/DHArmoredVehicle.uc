@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHArmoredVehicle extends DHVehicle
@@ -95,10 +95,7 @@ var     float       TurretHatchFireSpawnTime;
 var     bool        bHullMGFireNeeded;
 var     float       HullMGHatchFireSpawnTime;
 var     float       FireDetonationChance;   // chance of a fire blowing a vehicle up, runs each time the fire does damage
-var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle
-var     bool        bEngineFireSpreadPending;  // if true, engine fire will spread to the rest of the vehicle once it has burned for a while.
-var     float       EngineFireSpreadTime;
-var     Range       EngineToHullFireDelayRange;
+var     float       EngineToHullFireChance; // chance of an engine fire spreading to the rest of the vehicle, runs each time engine takes fire damage
 var     bool        bFirstPenetratingHit;
 var     bool        bHEATPenetration;       // a penetrating round is a HEAT round
 var     Controller  WhoSetOnFire;
@@ -207,17 +204,6 @@ simulated function Timer()
         if (bEngineOnFire && Now >= NextEngineFireDamageTime)
         {
             TakeEngineFireDamage();
-        }
-
-        // Handle the spread of engine fire to the rest of the vehicle.
-        if (bEngineOnFire && !bOnFire && bEngineFireSpreadPending && Now >= EngineFireSpreadTime)
-        {
-            if (bDebuggingText)
-            {
-                Log("Engine fire has spread to the rest of the vehicle!");
-            }
-
-            StartHullFire(WhoSetEngineOnFire);
         }
 
         // Check to see if we need to destroy a spiked, abandoned vehicle
@@ -872,7 +858,7 @@ function bool IsAnAllowedCrewman(Pawn P, optional out DHPawn DHP)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 // New function to handle starting a hull fire
-function StartHullFire(Controller InstigatedBy)
+function StartHullFire(Pawn InstigatedBy)
 {
     bOnFire = true;
 
@@ -884,7 +870,7 @@ function StartHullFire(Controller InstigatedBy)
     // Record the player responsible for starting fire, so score can be awarded later if results in a kill
     if (InstigatedBy != none)
     {
-        WhoSetOnFire = InstigatedBy;
+        WhoSetOnFire = InstigatedBy.Controller;
         DelayedDamageInstigatorController = WhoSetOnFire;
     }
 
@@ -934,21 +920,6 @@ function StartEngineFire(Pawn InstigatedBy)
 
     // Set fire damage due immediately & call Timer() directly (it handles damage & setting of next due Timer)
     NextEngineFireDamageTime = Level.TimeSeconds;
-
-    if (FRand() <= EngineToHullFireChance)
-    {
-        // Set a flag to indicate that the engine fire will spread to the hull.
-        bEngineFireSpreadPending = true;
-
-        // Set the time that the engine fire will spread to the hull.
-        EngineFireSpreadTime = Level.TimeSeconds + class'UInterp'.static.Linear(FRand(), EngineToHullFireDelayRange.Min, EngineToHullFireDelayRange.Max);
-
-        if (bDebuggingText)
-        {
-            Log("Engine fire will spread to hull!");
-        }
-    }
-
     Timer();
 
     // Engine fire effect
@@ -1959,14 +1930,7 @@ function TakeDamage(int Damage, Pawn InstigatedBy, vector HitLocation, vector Mo
             // Random chance of penetration causing a hull fire // TODO: relate probability to damage, as currently even tiny damage has a high chance of starting a fire
             if (FRand() < HullFirePercent)
             {
-                if (InstigatedBy != none)
-                {
-                    StartHullFire(InstigatedBy.Controller);
-                }
-                else
-                {
-                    StartHullFire(none);
-                }
+                StartHullFire(InstigatedBy);
             }
             // If we didn't start a fire & this is the 1st time a projectile has penetrated, increase the chance of causing a hull fire for any future penetrations (spilled fuel, loose electrical circuits, etc)
             else if (bFirstPenetratingHit)
@@ -2136,6 +2100,12 @@ function TakeEngineFireDamage()
             }
 
             DamageEngine(EngineFireDamagePer3Secs, PawnWhoSetOnFire, vect(0.0, 0.0, 0.0), vect(0.0, 0.0, 0.0), VehicleBurningDamType);
+
+            // Small chance each time of engine fire spreading & setting whole vehicle on fire
+            if (!bOnFire && FRand() < EngineToHullFireChance)
+            {
+                StartHullFire(PawnWhoSetOnFire);
+            }
 
             // Engine not dead, so set next engine damage due in the normal 3 seconds
             if (EngineHealth > 0)
@@ -2456,7 +2426,7 @@ defaultproperties
     DamagedEffectHealthMediumSmokeFactor=0.65
     DamagedEffectHealthHeavySmokeFactor=0.35
     DamagedEffectHealthFireFactor=0.0
-    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
+    FireEffectClass=class'DH_Effects.DHVehicleDamagedEffect' //'DH_Effects.DHVehicleDamagedEffect' // driver's hatch fire
     FireAttachBone="driver_player"
     FireEffectOffset=(X=0.0,Y=0.0,Z=-10.0) // position of driver's hatch fire - hull mg and turret fire positions are set in those pawn classes
 
@@ -2553,7 +2523,4 @@ defaultproperties
         KMaxAngularSpeed=1.0 // slow down the angular velocity so the tank feels "heavier"
     End Object
     KParams=KarmaParamsRBFull'DH_Engine.DHArmoredVehicle.KParams0'
-
-    EngineToHullFireDelayRange=(Min=3.0,Max=10.0)
-    bDebuggingText=true
 }

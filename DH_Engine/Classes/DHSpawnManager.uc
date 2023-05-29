@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHSpawnManager extends SVehicleFactory;
@@ -22,7 +22,6 @@ struct VehiclePool
     var() class<ROVehicle>  VehicleClass;
     var() bool              bIsInitiallyActive;
     var() bool              bIsSpawnVehicle;
-    var() int               InitialSpawnTimer;       // the amount of delay (in seconds )until this vehicle can be spawned initially
     var() float             RespawnTime;             // respawn interval in seconds
     var() byte              MaxSpawns;               // how many vehicles can be spawned from this pool
     var() byte              MaxActive;               // how many vehicles from this pool can be active at once
@@ -130,7 +129,7 @@ function Reset()
 
         GRI.VehiclePoolMaxActives[i] = VehiclePools[i].MaxActive;
         GRI.VehiclePoolMaxSpawns[i] = VehiclePools[i].MaxSpawns;
-        GRI.VehiclePoolNextAvailableTimes[i] = VehiclePools[i].InitialSpawnTimer;
+        GRI.VehiclePoolNextAvailableTimes[i] = 0.0;
         GRI.VehiclePoolSpawnCounts[i] = 0;
         GRI.VehiclePoolReservationCount[i] = 0;
 
@@ -304,7 +303,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
 
         // Set spawn protection variables for the vehicle
         DHV.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SP.SpawnProtectionTime);
-        DHV.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
+        DHV.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
         DHV.SpawnPoint = SP;
     }
 
@@ -314,7 +313,7 @@ function ROVehicle SpawnVehicle(DHPlayer PC, vector SpawnLocation, rotator Spawn
     if (Driver != none)
     {
         Driver.SpawnProtEnds = Level.TimeSeconds + Min(SPAWN_PROTECTION_TIME, SP.SpawnProtectionTime);
-        Driver.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnKillProtectionTime;
+        Driver.SpawnKillTimeEnds = Level.TimeSeconds + SP.SpawnProtectionTime;
         Driver.SpawnPoint = SP;
     }
 

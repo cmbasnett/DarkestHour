@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_LocustCannon extends DHVehicleCannon;
@@ -34,7 +34,8 @@ defaultproperties
     CustomPitchDownLimit=63716 // 10 degrees depression
 
     // Cannon ammo
-    PrimaryProjectileClass=class'DH_Vehicles.DH_LocustCannonShell' // same as Stuart AP but modified to use tracer static mesh, as usual corona effect can't be seen through gunsight overlay
+    ProjectileClass=class'DH_Vehicles.DH_LocustCannonShell' // same as Stuart AP but modified to use tracer static mesh, as usual corona effect can't be seen through gunsight overlay
+    PrimaryProjectileClass=class'DH_Vehicles.DH_LocustCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_StuartCannonShellHE'
     TertiaryProjectileClass=class'DH_Engine.DHCannonShellCanister'
 

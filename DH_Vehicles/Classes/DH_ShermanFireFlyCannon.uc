@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanFireFlyCannon extends DHVehicleCannon;
@@ -34,6 +34,7 @@ defaultproperties
     CustomPitchDownLimit=64625
 
     // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellAPDS'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanFireFlyCannonShellHE'

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_ShermanCannon_M4A3E8 extends DH_ShermanCannonA_76mm;
@@ -20,6 +20,7 @@ defaultproperties
     AltFireSpawnOffsetX=0.0
 
     // Projectiles
+    ProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_ShermanM4A176WCannonShellSmoke'

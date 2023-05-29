@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_Stug3GCannon extends DHVehicleCannon;
@@ -29,6 +29,7 @@ defaultproperties
     CustomPitchDownLimit=64444
 
     // Cannon ammo
+    ProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
     PrimaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShell'
     SecondaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellHE'
     TertiaryProjectileClass=class'DH_Vehicles.DH_Stug3GCannonShellSmoke'

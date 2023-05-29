@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHProjectileWeapon extends DHWeapon
@@ -151,32 +151,6 @@ var   int               ScopeScriptedTextureSize;   // Size, in pixels, for each
 
 var     bool            bCanUseIronsights;      // allows firing from a shouldered/hipfire position (while not deployed)
 
-enum EWeaponComponentAnimationDriverType
-{
-    DRIVER_MagazineAmmunition,  // Drives the animation based on the number of rounds in the magazine.
-                                // The animation MUST have the N+1 frames, where N is the number of bullets in the magazine.
-                                // For example, if a weapon has a 20 round magazine, there should be 21 frames of the animation.
-                                // The first frame (frame 0) should be an empty magazine, whereas frame N+1 is a full magazine.
-};
-
-// Weapon component animations
-// These are used to animate a part of the mesh based
-// on the state of the weapon (e.g., the number of rounds
-// remaining in the magazine, etc.)
-struct WeaponComponentAnimation
-{
-    var int Channel;    // Channel index
-    var name BoneName;  // Used as the root of the new channel
-    var name Animation; // The animation to use.
-    var EWeaponComponentAnimationDriverType DriverType;
-};
-var array<WeaponComponentAnimation> WeaponComponentAnimations;
-
-// Bullets for MG belts and magazines
-var     class<ROFPAmmoRound>    BeltBulletClass;   // class to spawn for each bullet on the ammo belt
-var     array<ROFPAmmoRound>    MGBeltArray;       // array of first person ammo rounds
-var     array<name>             MGBeltBones;       // array of bone names to attach the belt to
-
 replication
 {
     // Variables the server will replicate to the client that owns this actor
@@ -200,7 +174,7 @@ simulated function PostBeginPlay()
 
     // Pre-apply bayonet based on user setting (the user setting gets updated when client connects or changes the setting)
     // If this is a bayonet weapon & is the server and client wants a bayonet attached at spawn, then set the bayonet mounted and update status
-    if (bHasBayonet && Role == ROLE_Authority && Instigator != none)
+    if (bHasBayonet && Role == ROLE_Authority && Instigator != none && Instigator.Controller != none)
     {
         PC = DHPlayer(Instigator.Controller);
 
@@ -226,6 +200,11 @@ simulated function PostBeginPlay()
         {
             PlayAnim(IdleAnim, IdleAnimRate, 0.0);
         }
+    }
+
+    if (InstigatorIsLocallyControlled())
+    {
+        CreateBipodPhysicsSimulation();
     }
 
     if (bHasScope)
@@ -746,13 +725,6 @@ function byte BestMode()
     return super.BestMode();
 }
 
-simulated function InitializeClientWeaponSystems()
-{
-    CreateBipodPhysicsSimulation();
-    SetupWeaponComponentAnimationChannels();
-    SpawnAmmoBelt();
-}
-
 // Modified to update player's resupply status & to maybe set the barrel steaming (as the weapon is selected & brought up)
 simulated function BringUp(optional Weapon PrevWeapon)
 {
@@ -765,16 +737,12 @@ simulated function BringUp(optional Weapon PrevWeapon)
 
     if (InstigatorIsLocalHuman())
     {
-        InitializeClientWeaponSystems();
-
         if (bBarrelSteamActive)
         {
             SetBarrelSteamActive(true);
         }
 
         UpdateBayonet();
-        UpdateWeaponComponentAnimations();
-        UpdateAmmoBelt();
     }
 }
 
@@ -828,9 +796,9 @@ simulated state RaisingWeapon
             ZoomOut();
         }
 
+        // Reset any zoom values
         if (InstigatorIsLocalHuman())
         {
-            // Reset any zoom values
             if (DisplayFOV != default.DisplayFOV)
             {
                 DisplayFOV = default.DisplayFOV;
@@ -840,8 +808,6 @@ simulated state RaisingWeapon
             {
                 PlayerViewZoom(false);
             }
-
-            UpdateWeaponComponentAnimations();
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(SelectEmptyAnim))
@@ -1941,8 +1907,9 @@ simulated state StartSprinting
         if (InstigatorIsLocallyControlled())
         {
             // Make the sprinting animation match the sprinting speed
+            LoopSpeed = 1.5;
             Speed2d = VSize(Instigator.Velocity);
-            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * SprintLoopAnimRate;
+            LoopSpeed = (Speed2d / (Instigator.default.GroundSpeed * Instigator.SprintPct)) * 1.5;
 
             if ((AmmoAmount(0) <= 0) && HasAnim(SprintLoopEmptyAnim))
             {
@@ -1976,11 +1943,11 @@ simulated function PlayStartSprint()
 {
     if (AmmoAmount(0) <= 0 && HasAnim(SprintStartEmptyAnim))
     {
-        PlayAnimAndSetTimer(SprintStartEmptyAnim, SprintStartAnimRate);
+        PlayAnimAndSetTimer(SprintStartEmptyAnim, 1.5);
     }
     else if (HasAnim(SprintStartAnim))
     {
-        PlayAnimAndSetTimer(SprintStartAnim, SprintStartAnimRate);
+        PlayAnimAndSetTimer(SprintStartAnim, 1.5);
     }
 }
 
@@ -2024,11 +1991,11 @@ simulated function PlayEndSprint()
 {
     if (AmmoAmount(0) <= 0 && HasAnim(SprintEndEmptyAnim))
     {
-        PlayAnimAndSetTimer(SprintEndEmptyAnim, SprintEndAnimRate);
+        PlayAnimAndSetTimer(SprintEndEmptyAnim, 1.5);
     }
     else
     {
-        PlayAnimAndSetTimer(SprintEndAnim, SprintEndAnimRate);
+        PlayAnimAndSetTimer(SprintEndAnim, 1.5);
     }
 }
 
@@ -2147,7 +2114,7 @@ simulated state Reloading extends WeaponBusy
             ROPawn(Instigator).HandleStandardReload();
         }
 
-        if (Role == ROLE_Authority && GetNextMagIndex() >= 0)
+        if (Role == ROLE_Authority)
         {
             // Update the ammo count for the next magazine so that the client knows.
             // This is needed for magazines that appear differently depending on
@@ -2288,16 +2255,12 @@ Begin:
         }
 
         if (AmmoAmount(0) < 1 && HasAnim(BipodMagEmptyReloadAnim))
-        {    
-            Sleep(GetAnimDuration(BipodMagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
-        }
-        else if (HasAnim(BipodMagPartialReloadAnim))
         {
-            Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
+            Sleep(GetAnimDuration(BipodMagEmptyReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
         else
         {
-            Warn("Missing animation for either BipodMagEmptyReloadAnim or BipodMagPartialReloadAnim");
+            Sleep(GetAnimDuration(BipodMagPartialReloadAnim, 1.0) - default.ZoomInTime - default.ZoomOutTime);
         }
 
         SetPlayerFOV(PlayerDeployFOV);
@@ -3347,162 +3310,6 @@ simulated function UpdateScopeMode()
             bPlayerFOVZooms = true;
 
             bInitializedScope = true;
-        }
-    }
-}
-
-//=============================================================================
-// WEAPON COMPONENT ANIMATION CHANNELS
-//=============================================================================
-
-// Mute animation channels for a specific driver type.
-simulated function MuteWeaponComponentAnimationChannelsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
-{
-    SetWeaponComponentAnimationChannelsBlendAlpha(DriverType, 0.0);
-}
-
-// Unmute animation channels for a specific driver type.
-simulated function UnmuteWeaponComponentAnimationChannelsWithDriverType(EWeaponComponentAnimationDriverType DriverType)
-{
-    SetWeaponComponentAnimationChannelsBlendAlpha(DriverType, 1.0);
-}
-
-// Set the blend alpha for animation channels for a specific driver type.
-private simulated function SetWeaponComponentAnimationChannelsBlendAlpha(EWeaponComponentAnimationDriverType DriverType, float BlendAlpha)
-{
-    local int i;
-
-    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
-    {
-        if (WeaponComponentAnimations[i].DriverType == DriverType)
-        {
-            AnimBlendParams(WeaponComponentAnimations[i].Channel, BlendAlpha,,, WeaponComponentAnimations[i].BoneName);
-        }
-    }
-}
-
-private simulated function SetupWeaponComponentAnimationChannels()
-{
-    local int i;
-
-    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
-    {
-        AnimBlendParams(WeaponComponentAnimations[i].Channel, 1.0,,, WeaponComponentAnimations[i].BoneName);
-        PlayAnim(WeaponComponentAnimations[i].Animation, 1.0,, WeaponComponentAnimations[i].Channel);
-    }
-}
-
-simulated function float GetMagazinePercent()
-{
-    return FClamp(float(AmmoAmount(0)) / MaxAmmo(0), 0.0, 1.0);
-}
-
-// Returns the animation time (i.e. frame) for a given component and theta value.
-simulated private function float GetWeaponComponentAnimationTime(int ComponentIndex, float Theta)
-{
-    switch (WeaponComponentAnimations[ComponentIndex].DriverType)
-    {
-        case DRIVER_MagazineAmmunition:
-            // Magazine-driven animations are expected to have N+1 frames where N is the maximum ammo.
-            return Theta * MaxAmmo(0);
-        default:
-            return 0.0;
-    }
-}
-
-// The theta value is a percentage (0.0 - 1.0) of how far along the animation should be.
-simulated private function float GetWeaponComponentAnimationTheta(EWeaponComponentAnimationDriverType DriverType)
-{
-    switch (DriverType)
-    {
-        case DRIVER_MagazineAmmunition:
-            return GetMagazinePercent();
-        default:
-            return 0.0;
-    }
-}
-
-// Updates magazine ammunition animations with a given theta.
-// Used when needing to drive the animation manually (i.e., with animation triggers).
-simulated function UpdateWeaponComponentAnimationsWithDriverType(EWeaponComponentAnimationDriverType DriverType, float Theta)
-{
-    local int i;
-
-    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
-    {
-        if (WeaponComponentAnimations[i].DriverType == DriverType)
-        {
-            UpdateWeaponComponentAnimation(i, Theta);
-        }
-    }
-}
-
-// Updates a single weapon component animation with a given theta.
-private simulated function UpdateWeaponComponentAnimation(int ComponentIndex, float Theta)
-{
-    PlayAnim(WeaponComponentAnimations[ComponentIndex].Animation, 1.0,, WeaponComponentAnimations[ComponentIndex].Channel);
-    FreezeAnimAt(GetWeaponComponentAnimationTime(ComponentIndex, Theta), WeaponComponentAnimations[ComponentIndex].Channel);
-}
-
-// Updates all weapon component animations with their respective theta values.
-simulated function UpdateWeaponComponentAnimations()
-{
-    local int i;
-
-    for (i = 0; i < WeaponComponentAnimations.Length; ++i)
-    {
-        UpdateWeaponComponentAnimation(i, GetWeaponComponentAnimationTheta(WeaponComponentAnimations[i].DriverType));
-    }
-}
-
-// Handles making ammo belt bullets disappear
-simulated function UpdateAmmoBelt()
-{
-    local int i;
-
-    for (i = Max(0, AmmoAmount(0)); i < MGBeltArray.Length; ++i)
-    {
-        if (MGBeltArray[i] != none)
-        {
-            MGBeltArray[i].SetDrawType(DT_None);
-        }
-    }
-}
-
-// Spawn the first person linked ammo belt.
-simulated function SpawnAmmoBelt()
-{
-    local int i;
-
-    // Delete any existing belt bullets.
-    for (i = 0; i < MGBeltArray.Length; ++i)
-    {
-        if (MGBeltArray[i] != none)
-        {
-            MGBeltArray[i].Destroy();
-        }
-    }
-
-    MGBeltArray.Length = 0;
-
-    // Spawn in the new bullets.
-    for (i = 0; i < MGBeltBones.Length; ++i)
-    {
-        MGBeltArray[i] = Spawn(BeltBulletClass, self);
-        AttachToBone(MGBeltArray[i], MGBeltBones[i]);
-    }
-}
-
-// Make the full ammo belt visible again (called by anim notifies)
-simulated function RenewAmmoBelt()
-{
-    local int i;
-
-    for (i = 0; i < MGBeltArray.Length; ++i)
-    {
-        if (MGBeltArray[i] != none)
-        {
-            MGBeltArray[i].SetDrawType(DT_StaticMesh);
         }
     }
 }

@@ -1,25 +1,25 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCommandMenu_Patron extends DHCommandMenu;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
 
     PC = GetPlayerController();
 
-    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (PC == none || Index < 0 || Index >= Options.Length)
     {
         return;
     }
 
     PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
 
-    switch (OptionIndex)
+    switch (Index)
     {
         case 0: // Construction
             Interaction.PushMenu("DH_Construction.DHCommandMenu_ConstructionGroups");

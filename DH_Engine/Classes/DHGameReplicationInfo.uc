@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHGameReplicationInfo extends ROGameReplicationInfo;
@@ -435,35 +435,24 @@ simulated function PostNetBeginPlay()
     // Loop all objectives to set index variables up based on tag ones (uses hash table)
     foreach AllActors(class'DHObjective', Obj)
     {
-        if (Obj == none)
+        if (Obj != none)
         {
-            continue;
-        }
-
-        // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
-        for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
-        {
-            if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
+            // Loop through the Axis Required Objectives (by tag) and set the (by index) values up
+            for (i = 0; i < Obj.AxisRequiredObjTagForCapture.Length; ++i)
             {
-                class'UArray'.static.IAddUnique(Obj.AxisRequiredObjForCapture, ObjIndex);
+                if (DHObjectiveTable.Get(string(Obj.AxisRequiredObjTagForCapture[i]), ObjIndex))
+                {
+                    Obj.AxisRequiredObjForCapture[Obj.AxisRequiredObjForCapture.Length] = ObjIndex;
+                }
             }
-        }
 
-        // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
-        for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
-        {
-            if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
+            // Loop through the Allies Required Objectives (by tag) and set the (by index) values up
+            for (i = 0; i < Obj.AlliesRequiredObjTagForCapture.Length; ++i)
             {
-                class'UArray'.static.IAddUnique(Obj.AlliesRequiredObjForCapture, ObjIndex);
-            }
-        }
-
-        // Link up objective reliances from tags (add to the existing list, for backwards compatibility).
-        for (i = 0; i < Obj.GroupedObjectiveReliancesTags.Length; ++i)
-        {
-            if (DHObjectiveTable.Get(string(Obj.GroupedObjectiveReliancesTags[i]), ObjIndex))
-            {
-                class'UArray'.static.IAddUnique(Obj.GroupedObjectiveReliances, ObjIndex);
+                if (DHObjectiveTable.Get(string(Obj.AlliesRequiredObjTagForCapture[i]), ObjIndex))
+                {
+                    Obj.AlliesRequiredObjForCapture[Obj.AlliesRequiredObjForCapture.Length] = ObjIndex;
+                }
             }
         }
     }
@@ -542,7 +531,6 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
-    // TODO: eliminate this
     // Eliminate all objective indices that do not match the lowest depth
     if (Indices.Length > 0)
     {
@@ -557,7 +545,6 @@ function GetIndicesForObjectiveSpawns(int Team, out array<int> Indices)
         }
     }
 
-    // Clear the depth bits from the indices.
     for (i = 0; i < Indices.Length; ++i)
     {
         Indices[i] = Indices[i] & 0xFFFF;
@@ -589,8 +576,6 @@ function TraverseTreeNode(int Team, DHObjectiveTreeNode Root, DHObjectiveTreeNod
     bNodeHasHints = Node.Objective.SpawnPointHintTags[Team] != '';
     bAlreadyAdded = class'UArray'.static.IIndexOf(ObjectiveIndices, Node.Objective.ObjNum) == -1;
     bIsActive = Node.Objective.IsActive();
-
-    // TODO: 
 
     if (bNodeHasHints && bIsFarEnoughAway && bAlreadyAdded && !bIsActive)
     {

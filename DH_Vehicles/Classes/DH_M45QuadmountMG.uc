@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DH_M45QuadmountMG extends DHVehicleMG;
@@ -140,8 +140,7 @@ defaultproperties
     bForceSkelUpdate=true // necessary for new player hit detection system, as makes server update the MG mesh skeleton, which it wouldn't otherwise as server doesn't draw mesh
     BeginningIdleAnim="idle_sights_in"
     GunnerAttachmentBone="Gun"
-    FireEffectOffset=(X=-25.0,Y=0.0,Z=-10.0)
-    FireEffectScale=0.60
+    FireEffectClass=none // no hatch fire effect
 
     // Collision
     bCollideActors=true

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCommandMenu_FireSupport extends DHCommandMenu
@@ -17,7 +17,7 @@ var localized string AvailableAirstrikesText;
 var array<DHGameReplicationInfo.SAvailableArtilleryInfoEntry> AvailableOffMapSupportArray; // cached available artillery support info
 var bool bIsArtilleryTargetValid;
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int Index, vector Location)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI;
@@ -30,14 +30,14 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
 
     GRI.GetMapCoords(Location, MapLocation.X, MapLocation.Y);
 
-    if (PC == none || OptionIndex < 0 || OptionIndex >= Options.Length)
+    if (PC == none || Index < 0 || Index >= Options.Length)
     {
         return;
     }
 
-    if (PC.IsArtilleryTargetValid(Location, HitNormal))
+    if (PC.IsArtilleryTargetValid(Location))
     {
-        PC.AddMarker(class<DHMapMarker>(Options[OptionIndex].OptionalObject), MapLocation.X, MapLocation.Y, Location);
+        PC.AddMarker(class<DHMapMarker>(Options[Index].OptionalObject), MapLocation.X, MapLocation.Y, Location);
     }
     else
     {
@@ -117,10 +117,9 @@ function DHFireSupport.EFireSupportError GetFireSupportError(DHPlayer PC, class<
 
 function Tick()
 {
-    local DHPlayer              PC;
-    local vector                HitLocation, HitNormal;
-    local DHGameReplicationInfo GRI;
-    local Actor                 HitActor;
+    local DHPlayer                PC;
+    local vector                  HitLocation, HitNormal;
+    local DHGameReplicationInfo   GRI;
 
     PC = GetPlayerController();
 
@@ -146,24 +145,10 @@ function Tick()
 
     if (PC.SpottingMarker != none)
     {
-        PC.GetEyeTraceLocation(HitLocation, HitNormal, HitActor);
-
+        PC.GetEyeTraceLocation(HitLocation, HitNormal);
         PC.SpottingMarker.SetLocation(HitLocation);
         PC.SpottingMarker.SetRotation(QuatToRotator(QuatFindBetween(HitNormal, vect(0, 0, 1))));
-
-        if (HitActor != none)
-        {
-            bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation, HitNormal);
-
-            if (bIsArtilleryTargetValid)
-            {
-                if (VSize(PC.Pawn.Location - HitLocation) > PC.Pawn.Region.Zone.DistanceFogEnd)
-                {
-                    // Don't allow marking beyond the fog distance.
-                    bIsArtilleryTargetValid = false;
-                }
-            }
-        }
+        bIsArtilleryTargetValid = PC.IsArtilleryTargetValid(HitLocation);
 
         if (bIsArtilleryTargetValid)
         {

@@ -1,6 +1,6 @@
 //==============================================================================
 // Darkest Hour: Europe '44-'45
-// Darklight Games (c) 2008-2023
+// Darklight Games (c) 2008-2022
 //==============================================================================
 
 class DHCommandMenu_SquadManageMember extends DHCommandMenu;
@@ -38,7 +38,7 @@ function bool ShouldHideMenu()
     return P == none || P.bDeleteMe || P.Health <= 0;
 }
 
-function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
+function OnSelect(int OptionIndex, vector Location)
 {
     local DHPlayer PC;
     local DHPlayerReplicationInfo PRI, OtherPRI;
@@ -65,7 +65,7 @@ function OnSelect(int OptionIndex, vector Location, optional vector HitNormal)
                     PC.ServerSquadKick(OtherPRI);
                     break;
                 case 1: // Promote to leader
-                    PC.ServerSendSquadPromotionRequest(OtherPRI);
+                    PC.ServerSquadPromote(OtherPRI);
                     break;
                 case 2: // Ban from squad
                     PC.ServerSquadBan(OtherPRI);
