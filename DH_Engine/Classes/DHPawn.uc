@@ -7478,8 +7478,21 @@ exec function BigHead(float V)
 simulated function bool CanBuildWithShovel()
 {
     local DHPlayerReplicationInfo PRI;
+    local DHGameReplicationInfo GRI;
+    local DHPlayer PC;
 
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
+    PC = DHPlayer(Controller);
+
+    if (PC != none)
+    {
+        GRI = DHGameReplicationInfo(PC.GameReplicationInfo);
+
+        if (GRI != none && GRI.GameType.default.bIgnoreSquadLeaderConstructionRestrictions)
+        {
+            return true;
+        }
+    }
 
     return Level.NetMode == NM_Standalone || !PRI.IsSquadLeader() || HasSquadmatesWithinDistance(50.0);
 }

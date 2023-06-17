@@ -28,6 +28,9 @@ var int                 OutOfReinfRoundTime;                    // The round tim
 var InterpCurve         ElapsedTimeAttritionCurve;              // Curve which inputs elapsed time and outputs attrition amount
                                                                 // used to setup a pseudo time limit for Advance/Attrition game modes
                                                                 // this way if there are too many reinforcements, the round will end in a sane amount of time
+
+var bool                bIgnoreSquadLeaderConstructionRestrictions; // Whether this gamemode ignores the squad leader construction restrictions (e.g. SLs unable to solo build)
+
 defaultproperties
 {
     GameTypeName="Unknown Game Type"

@@ -18,6 +18,7 @@ defaultproperties
     bSquadSpecialRolesOnly=true
     bHasTemporarySpawnVehicles=true
 
+    bIgnoreSquadLeaderConstructionRestrictions=true
+
     ObjSpawnMinimumDepth=1
 }
-
