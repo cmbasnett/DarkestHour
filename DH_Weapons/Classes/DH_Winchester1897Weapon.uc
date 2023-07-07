@@ -48,4 +48,6 @@ defaultproperties
 
     BayoAttachAnim="Bayonet_on"
     BayoDetachAnim="Bayonet_off"
+
+    WeaponComponentAnimations(0)=(DriverType=DRIVER_Bayonet,Channel=1,BoneName="front_loop",Animation="slingbayonet")
 }
