@@ -15,13 +15,14 @@ defaultproperties
 
     Mesh=SkeletalMesh'DH_Winchester1897_1st.Winchester1897'
 
-    DisplayFOV=80.0
+    DisplayFOV=90.0
     PlayerIronsightFOV=65.0
     IronSightDisplayFOV=50.0
     BobModifyFactor=0.4
 
     MaxNumPrimaryMags=7
     InitialNumPrimaryMags=7
+
 
     IronBringUp="iron_in"
 //  IronBringUpRest="Post_fire_iron_in" // TODO: ideally should have this, with hammer up after firing (played when ironsighting while waiting to work the pump action)
@@ -34,8 +35,17 @@ defaultproperties
     PreReloadAnim="Reload_start"
     SingleReloadAnim="Reload_single_round"
     PostReloadAnim="Reload_end_pump_action"
-
+    SprintStartAnim="sprint_start"
+    SprintLoopAnim="sprint_middle"
+    SprintEndAnim="sprint_end"
     // Revert unwanted inherited values from DHSniperWeapon:
     bIsSniper=false
     bSniping=false
+    
+
+    bHasBayonet=true
+    BayonetBoneName="bayonet"
+
+    BayoAttachAnim="Bayonet_on"
+    BayoDetachAnim="Bayonet_off"
 }
