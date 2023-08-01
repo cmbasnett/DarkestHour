@@ -76,6 +76,34 @@ defaultproperties
 //  PA_PostReloadAnim="stand_close_karscope"
 //  PA_PronePostReloadAnim="prone_close_karscope"
 
+
+// bayonet
+
+    WA_BayonetIdle="idle_bayonet_winchester"
+    WA_BayonetFire="idle_bayonet_winchester"
+    WA_BayonetReload="idle_bayonet_winchester"
+    WA_BayonetReloadEmpty="idle_bayonet_winchester"
+    WA_BayonetProneReload="idle_bayonet_winchester"
+    WA_BayonetProneReloadEmpty="idle_bayonet_winchester"
+    WA_BayonetPreReload="idle_bayonet_winchester"
+    WA_BayonetPostReload="idle_bayonet_winchester"
+    WA_BayonetAttach="idle_bayonet_winchester"
+    WA_BayonetDetach="idle_bayonet_winchester"
+    WA_BayonetAttachProne="idle_bayonet_winchester"
+    WA_BayonetDetachProne="idle_bayonet_winchester"
+    WA_BayonetWorkBolt="idle_bayonet_winchester"
+
+    PA_BayonetAttachAnim="stand_bayattach_kar"
+    PA_ProneBayonetAttachAnim="prone_Bayattach_kar"
+    PA_BayonetDetachAnim="stand_bayremove_kar"
+    PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
+    
+
+    PA_BayonetAltFire="stand_stab_kar"
+    PA_CrouchBayonetAltFire="crouch_idlestrike_bayo"
+    PA_ProneBayonetAltFire="prone_idlestrike_bayo"
+    
+
     PA_MovementAnims(0)="stand_jogF_kar"
     PA_MovementAnims(1)="stand_jogB_kar"
     PA_MovementAnims(2)="stand_jogL_kar"
