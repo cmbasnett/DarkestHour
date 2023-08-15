@@ -37,8 +37,7 @@ simulated function bool StartFire(int Mode)
 defaultproperties
 {
     SwayModifyFactor=0.65 // -0.5
-    ItemName="MP 41(r)"
-    NativeItemName="Maschinenpistole 41(r)"
+    ItemName="Maschinenpistole 41(r)"
 
     FireModeClass(0)=class'DH_Weapons.DH_MP41RFire'
     FireModeClass(1)=class'DH_Weapons.DH_MP41RMeleeFire'

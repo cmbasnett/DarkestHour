@@ -7,8 +7,7 @@ class DH_G41Weapon extends DHBoltActionWeapon;
 
 defaultproperties
 {
-    ItemName="G 41(W)"
-    NativeItemName="Gewehr 41(W)"
+    ItemName="Gewehr 41(W)"
     SwayModifyFactor=0.83 // +0.13 because it was a heavy, disbalanced and awkward rifle
     FireModeClass(0)=class'DH_Weapons.DH_G41Fire'
     FireModeClass(1)=class'DH_Weapons.DH_G41MeleeFire'
@@ -22,7 +21,7 @@ defaultproperties
 
     Skins(4)=Shader'Weapons1st_tex.bayonet.KarBayonet_S'
 
-    IronSightDisplayFOV=53.0
+    IronSightDisplayFOV=58.0
     DisplayFOV=82.0
     FreeAimRotationSpeed=7.5
 

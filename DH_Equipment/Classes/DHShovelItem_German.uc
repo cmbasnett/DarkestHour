@@ -13,6 +13,4 @@ defaultproperties
     HighDetailOverlay=Shader'DH_Equipment_tex.Shovels.German_shovel_s'
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
-    
-    NativeItemName="Feldspaten"
 }

@@ -12,7 +12,7 @@ defaultproperties
     AltName="Scharfschütze"
     Article="a "
     PluralName="Snipers"
-    Limit=1
+    Limit=2
     AddedRoleRespawnTime=15
     bExemptSquadRequirement=true
     bCanBeSquadLeader=false

@@ -7,8 +7,7 @@ class DH_RPG43GrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="RPG-43 Anti-Tank Grenade"
-    NativeItemName="RPG-43"
+    ItemName="RPG43 Anti-Tank Grenade"
     FireModeClass(0)=class'DH_Weapons.DH_RPG43GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_RPG43GrenadeFire' // no toss fire because it would be utterly useless
     AttachmentClass=class'DH_Weapons.DH_RPG43GrenadeAttachment'

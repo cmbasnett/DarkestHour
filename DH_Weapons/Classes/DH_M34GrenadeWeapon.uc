@@ -7,8 +7,7 @@ class DH_M34GrenadeWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="RG-34 Grenade"
-    NativeItemName="OUG vz.34 Rucni Granat"
+    ItemName="M-34 Impact Grenade"
     FireModeClass(0)=class'DH_Weapons.DH_M34GrenadeFire'
     FireModeClass(1)=class'DH_Weapons.DH_M34GrenadeFire' // no toss fire because it would be utterly useless
     AttachmentClass=class'DH_Weapons.DH_M34GrenadeAttachment'

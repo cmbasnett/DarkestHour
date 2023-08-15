@@ -403,10 +403,7 @@ exec simulated function LogAmmo()
 // Called by animations to force the scope rendering.
 simulated event DHForceRenderScope()
 {
-    if (bHasScope)
-    {
-        bForceRenderScope = true;
-    }
+    bForceRenderScope = true;
 }
 
 simulated event RenderOverlays(Canvas Canvas)
@@ -479,7 +476,7 @@ simulated event RenderOverlays(Canvas Canvas)
         Skins[LensMaterialID] = ScriptedTextureFallback;
     }
 
-    if (bHasScope && (bUsingSights || IsInstigatorBipodDeployed() || bForceRenderScope))  // TODO: also we shouldn't be in the idlerest animation!
+    if (bHasScope && (bUsingSights || bForceRenderScope))  // TODO: also we shouldn't be in the idlerest animation!
     {
         if (bForceModelScope || ScopeDetail == RO_ModelScope || ScopeDetail == RO_ModelScopeHigh)
         {
@@ -586,7 +583,7 @@ simulated event RenderTexture(ScriptedTexture Tex)
 
 simulated function bool ShouldDrawPortal()
 {
-    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || ((bUsingSights || IsInstigatorBipodDeployed()) && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
+    return bHasScope && LensMaterialID != -1 && (bForceRenderScope || (bUsingSights && (IsInState('Idle') || IsInState('PostFiring') || IsInState('SwitchingFireMode'))));
 }
 
 // Modified to prevent the exploit of freezing your animations after firing

@@ -7,7 +7,8 @@ class DH_GLWeapon extends DHExplosiveWeapon;
 
 defaultproperties
 {
-    ItemName="StG 24 x7 Geballte Ladung"
+    ItemName="M24 x7 Geballte Ladung"
+
     FireModeClass(0)=class'DH_Weapons.DH_GLFire'
     AttachmentClass=class'DH_Weapons.DH_GLAttachment'
     PickupClass=class'DH_Weapons.DH_GLPickup'

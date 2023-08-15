@@ -37,13 +37,12 @@ var     bool    bSpawnShellsOutBottom;
 var     vector  BackAttachmentLocationOffset;
 var     rotator BackAttachmentRotationOffset;
 
-// An offset for correcting the tip location.
-var     vector  MuzzleFlashOffset;
-
 // Modified to actual use the muzzle bone name instead of a hard-coded "tip" bone
 simulated function vector GetTipLocation()
 {
-    return GetBoneCoords(MuzzleBoneName).Origin;
+    local Coords C;
+    C = GetBoneCoords(MuzzleBoneName);
+    return C.Origin;
 }
 
 // Modified to avoid spawning a barrel steam emitter - instead wait until weapon is selected
@@ -53,7 +52,6 @@ simulated function PostBeginPlay()
     {
         mMuzFlash3rd = Spawn(mMuzFlashClass);
         AttachToBone(mMuzFlash3rd, MuzzleBoneName);
-        mMuzFlash3rd.SetRelativeLocation(MuzzleFlashOffset);
     }
 }
 

@@ -35,7 +35,6 @@ defaultproperties
     BarrelSteamBone="Muzzle"
 
     bHasSelectFire=true
-    bPlusOneLoading=false
     IdleEmptyAnim="idle_empty"
     IronIdleEmptyAnim="Iron_idle_empty"
     IronBringUpEmpty="Iron_in_empty"

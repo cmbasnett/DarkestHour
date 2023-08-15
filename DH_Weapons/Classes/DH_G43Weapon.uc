@@ -7,8 +7,7 @@ class DH_G43Weapon extends DHProjectileWeapon;
 
 defaultproperties
 {
-    ItemName="G 43"
-    NativeItemName="Gewehr 43"
+    ItemName="Gewehr 43"
     FireModeClass(0)=class'DH_Weapons.DH_G43Fire'
     FireModeClass(1)=class'DH_Weapons.DH_G43MeleeFire'
     PickupClass=class'DH_Weapons.DH_G43Pickup'
@@ -19,7 +18,7 @@ defaultproperties
     bUseHighDetailOverlayIndex=true
     HighDetailOverlayIndex=2
 
-    IronSightDisplayFOV=50.0
+    IronSightDisplayFOV=55.0
     DisplayFOV=85.0
 
     MaxNumPrimaryMags=10

@@ -7,8 +7,7 @@ class DH_MP41Weapon extends DHAutoWeapon;
 
 defaultproperties
 {
-    ItemName="MP 41"
-    NativeItemName="Maschinenpistole 41"
+    ItemName="Maschinenpistole 41"
     FireModeClass(0)=class'DH_Weapons.DH_MP41Fire'
     FireModeClass(1)=class'DH_Weapons.DH_MP41MeleeFire'
     PickupClass=class'DH_Weapons.DH_MP41Pickup'

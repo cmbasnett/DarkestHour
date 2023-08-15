@@ -53,7 +53,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
 
     if (I != none)
     {
-        S = Repl(S, "{0}", class'DHPlayer'.static.GetInventoryName(I.Class));
+        S = Repl(S, "{0}", I.default.ItemName);
     }
 
     return S;
