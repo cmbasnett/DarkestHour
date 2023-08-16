@@ -57,11 +57,11 @@ defaultproperties
     WA_PostReload="Pump_action"
 
     //need to add the pumping anims
-    PA_StandBoltActionAnim=""
-    PA_StandIronBoltActionAnim=""
-    PA_CrouchBoltActionAnim=""
-    PA_CrouchIronBoltActionAnim=""
-    PA_ProneBoltActionAnim=""
+    PA_StandBoltActionAnim="pump_standing_1897"
+    PA_StandIronBoltActionAnim="pump_standing_iron_1897"
+    PA_CrouchBoltActionAnim="pump_crouch_1897"
+    PA_CrouchIronBoltActionAnim="pump_crouch_iron_1897"
+    PA_ProneBoltActionAnim="pump_prone_1897"
 
     //reload anims
     PA_PreReloadAnim="reload_start_1897"
@@ -92,7 +92,7 @@ defaultproperties
     //bayonet attaching animations
     PA_BayonetAttachAnim="stand_bayattach_1897"
     PA_ProneBayonetAttachAnim="prone_Bayattach_1897"
-    PA_BayonetDetachAnim="stand_bayremove_kar" //placeholder
+    PA_BayonetDetachAnim="stand_bayremove_1897" //placeholder
     PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
     
     //bayonet stabbing animations
