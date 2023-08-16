@@ -65,13 +65,13 @@ defaultproperties
 
     //reload anims
     PA_PreReloadAnim="reload_start_1897"
-    PA_PronePreReloadAnim="prone_open_karscope" //anim start of the prone relaod
+    PA_PronePreReloadAnim="prone_reload_start_1897" //anim start of the prone relaod
     PA_ReloadAnim="reload_single_1897"
     PA_ReloadEmptyAnim="reload_single_1897"
-    PA_ProneReloadAnim="prone_insert_1897"
-    PA_ProneReloadEmptyAnim="prone_insert_1897"
+    PA_ProneReloadAnim="prone_reload_single_1897"
+    PA_ProneReloadEmptyAnim="prone_reload_single_1897"
     PA_PostReloadAnim="reload_end_1897"
-    PA_PronePostReloadAnim="pump_prone_1897"
+    PA_PronePostReloadAnim="prone_reload_end_1897"
 
 
     // bayonet, ideally add all the anims for this
@@ -203,40 +203,40 @@ defaultproperties
     PA_MoveStandFire(7)="stand_shootFLhip_1897"
 
     //moving, crouching firing
-    PA_MoveCrouchFire(0)="crouch_shootF_kar"
-    PA_MoveCrouchFire(1)="crouch_shootF_kar"
-    PA_MoveCrouchFire(2)="crouch_shootLR_kar"
-    PA_MoveCrouchFire(3)="crouch_shootLR_kar"
-    PA_MoveCrouchFire(4)="crouch_shootF_kar"
-    PA_MoveCrouchFire(5)="crouch_shootF_kar"
-    PA_MoveCrouchFire(6)="crouch_shootF_kar"
-    PA_MoveCrouchFire(7)="crouch_shootF_kar"
+    PA_MoveCrouchFire(0)="crouch_shootF_1897"
+    PA_MoveCrouchFire(1)="crouch_shootF_1897"
+    PA_MoveCrouchFire(2)="crouch_shootLR_1897"
+    PA_MoveCrouchFire(3)="crouch_shootLR_1897"
+    PA_MoveCrouchFire(4)="crouch_shootF_1897"
+    PA_MoveCrouchFire(5)="crouch_shootF_1897"
+    PA_MoveCrouchFire(6)="crouch_shootF_1897"
+    PA_MoveCrouchFire(7)="crouch_shootF_1897"
 
     //moving, walking firing
-    PA_MoveWalkFire(0)="stand_shootFwalk_kar"
-    PA_MoveWalkFire(1)="stand_shootFwalk_kar"
-    PA_MoveWalkFire(2)="stand_shootLRwalk_kar"
-    PA_MoveWalkFire(3)="stand_shootLRwalk_kar"
-    PA_MoveWalkFire(4)="stand_shootFLwalk_kar"
-    PA_MoveWalkFire(5)="stand_shootFRwalk_kar"
-    PA_MoveWalkFire(6)="stand_shootFRwalk_kar"
-    PA_MoveWalkFire(7)="stand_shootFLwalk_kar"
+    PA_MoveWalkFire(0)="stand_shootFwalk_1897"
+    PA_MoveWalkFire(1)="stand_shootFwalk_1897"
+    PA_MoveWalkFire(2)="stand_shootLRwalk_1897"
+    PA_MoveWalkFire(3)="stand_shootLRwalk_1897"
+    PA_MoveWalkFire(4)="stand_shootFLwalk_1897"
+    PA_MoveWalkFire(5)="stand_shootFRwalk_1897"
+    PA_MoveWalkFire(6)="stand_shootFRwalk_1897"
+    PA_MoveWalkFire(7)="stand_shootFLwalk_1897"
 
     //moving, standing firing
-    PA_MoveStandIronFire(0)="stand_shootiron_kar"
-    PA_MoveStandIronFire(1)="stand_shootiron_kar"
-    PA_MoveStandIronFire(2)="stand_shootLRiron_kar"
-    PA_MoveStandIronFire(3)="stand_shootLRiron_kar"
-    PA_MoveStandIronFire(4)="stand_shootFLiron_kar"
-    PA_MoveStandIronFire(5)="stand_shootFRiron_kar"
-    PA_MoveStandIronFire(6)="stand_shootFRiron_kar"
-    PA_MoveStandIronFire(7)="stand_shootFLiron_kar"
+    PA_MoveStandIronFire(0)="stand_shootiron_1897"
+    PA_MoveStandIronFire(1)="stand_shootiron_1897"
+    PA_MoveStandIronFire(2)="stand_shootLRiron_1897"
+    PA_MoveStandIronFire(3)="stand_shootLRiron_1897"
+    PA_MoveStandIronFire(4)="stand_shootFLiron_1897"
+    PA_MoveStandIronFire(5)="stand_shootFRiron_1897"
+    PA_MoveStandIronFire(6)="stand_shootFRiron_1897"
+    PA_MoveStandIronFire(7)="stand_shootFLiron_1897"
 
     //misc
-    PA_FireLastShot="stand_shoothip_kar"
-    PA_IronFireLastShot="stand_shootiron_kar"
-    PA_CrouchFireLastShot="crouch_shoot_kar"
-    PA_ProneFireLastShot="prone_shoot_kar"
+    PA_FireLastShot="stand_shoothip_1897"
+    PA_IronFireLastShot="stand_shootiron_1897"
+    PA_CrouchFireLastShot="crouch_shoot_1897"
+    PA_ProneFireLastShot="prone_shoot_1897"
     PA_AltFire="stand_idlestrike_kar"
     PA_CrouchAltFire="stand_idlestrike_kar"
     PA_ProneAltFire="prone_idlestrike_bayo"
