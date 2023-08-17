@@ -36,8 +36,8 @@ simulated function PlayThirdPersonPumpActionSound()
 
 defaultproperties
 {
-    Mesh=SkeletalMesh'DH_Weapons3rd_anm.Winchester1897_3rd'
-    Skins(0)=Texture'DH_Weapon_tex.AlliedSmallArms_3rdP.Winchester1897_3rdP'
+    Mesh=SkeletalMesh'DH_Winchester1897_anm.Winchester1897_3rd'
+    Skins(0)=Texture'DH_Winchester1897.Winchester.Winchester1897_3rdP'
     MenuImage=Texture'DH_InterfaceArt_tex.weapon_icons.Winchester1897_icon'
 
     mMuzFlashClass=class'ROEffects.MuzzleFlash3rdNagant'
@@ -48,13 +48,29 @@ defaultproperties
     bRapidFire=false
 
 
-    //these are the weapon animations, need to add these through some magic that colin will show
-    WA_Idle="Idle"
-    WA_Fire="Idle"
-    WA_WorkBolt="Pump_action"
-    WA_Reload="Idle"
-    WA_ProneReload="Idle"
-    WA_PostReload="Pump_action"
+    //weapon animations, mostly handled by the character
+    WA_Idle="idle_1897"
+    WA_Fire="idle_1897"
+    WA_WorkBolt="pump_standing_1897"
+    WA_Reload="idle_1897"
+    WA_ProneReload="idle_1897"
+    WA_PostReload="reload_end_1897"
+
+    // bayonet
+    WA_BayonetIdle="idle_bayo_1897" 
+    WA_BayonetIdleEmpty="idle_bayo_1897"
+    WA_BayonetFire="idle_bayo_1897"
+    WA_BayonetReload="idle_bayo_1897"
+    WA_BayonetReloadEmpty="idle_bayo_1897"
+    WA_BayonetProneReload="idle_bayo_1897"
+    WA_BayonetProneReloadEmpty="idle_bayo_1897"
+    WA_BayonetPreReload="idle_bayo_1897"
+    WA_BayonetPostReload="reload_end_bayo_1897"
+    WA_BayonetAttach="stand_bayattach_1897" 
+    WA_BayonetDetach="stand_bayremove_1897" 
+    WA_BayonetAttachProne="prone_bayattach_1897" 
+    WA_BayonetDetachProne="prone_bayremove_1897"   
+    WA_BayonetWorkBolt="pump_standing_bayo_1897"
 
     //need to add the pumping anims
     PA_StandBoltActionAnim="pump_standing_1897"
@@ -65,7 +81,7 @@ defaultproperties
 
     //reload anims
     PA_PreReloadAnim="reload_start_1897"
-    PA_PronePreReloadAnim="prone_reload_start_1897" //anim start of the prone relaod
+    PA_PronePreReloadAnim="prone_reload_start_1897" 
     PA_ReloadAnim="reload_single_1897"
     PA_ReloadEmptyAnim="reload_single_1897"
     PA_ProneReloadAnim="prone_reload_single_1897"
@@ -74,26 +90,11 @@ defaultproperties
     PA_PronePostReloadAnim="prone_reload_end_1897"
 
 
-    // bayonet, ideally add all the anims for this
-    WA_BayonetIdle="idle_bayonet_winchester"
-    WA_BayonetFire="idle_bayonet_winchester"
-    WA_BayonetReload="idle_bayonet_winchester"
-    WA_BayonetReloadEmpty="idle_bayonet_winchester"
-    WA_BayonetProneReload="idle_bayonet_winchester"
-    WA_BayonetProneReloadEmpty="idle_bayonet_winchester"
-    WA_BayonetPreReload="idle_bayonet_winchester"
-    WA_BayonetPostReload="idle_bayonet_winchester"
-    WA_BayonetAttach="idle_bayonet_winchester"
-    WA_BayonetDetach="idle_bayonet_winchester"
-    WA_BayonetAttachProne="idle_bayonet_winchester"
-    WA_BayonetDetachProne="idle_bayonet_winchester"
-    WA_BayonetWorkBolt="idle_bayonet_winchester"
-
     //bayonet attaching animations
     PA_BayonetAttachAnim="stand_bayattach_1897"
     PA_ProneBayonetAttachAnim="prone_Bayattach_1897"
-    PA_BayonetDetachAnim="stand_bayremove_1897" //placeholder
-    PA_ProneBayonetDetachAnim="prone_Bayremove_kar"
+    PA_BayonetDetachAnim="stand_bayremove_1897" 
+    PA_ProneBayonetDetachAnim="prone_bayremove_1897"
     
     //bayonet stabbing animations
     PA_BayonetAltFire="stand_stab_kar"
@@ -140,6 +141,18 @@ defaultproperties
     PA_WalkIronAnims(6)="stand_walkBLiron_1897"
     PA_WalkIronAnims(7)="stand_walkBRiron_1897"
 
+
+    //prone iron anims
+
+    PA_ProneIronAnims(0)="prone_slowcrawlF_1897"
+	PA_ProneIronAnims(1)="prone_slowcrawlB_1897"
+	PA_ProneIronAnims(2)="prone_slowcrawlL_1897"
+	PA_ProneIronAnims(3)="prone_slowcrawlR_1897"
+	PA_ProneIronAnims(4)="prone_slowcrawlL_1897"
+	PA_ProneIronAnims(5)="prone_slowcrawlR_1897"
+	PA_ProneIronAnims(6)="prone_slowcrawlB_1897"
+	PA_ProneIronAnims(7)="prone_slowcrawlB_1897"
+
     //sprint, anims match up, no change
     PA_SprintAnims(0)="stand_sprintF_kar" 
     PA_SprintAnims(1)="stand_sprintB_kar" 
@@ -165,9 +178,11 @@ defaultproperties
     PA_TurnLeftAnim="stand_turnLhip_kar"
     PA_TurnIronRightAnim="stand_turnRiron_kar"
     PA_TurnIronLeftAnim="stand_turnLiron_kar"
+    PA_ProneTurnRightAnim="prone_turnR_1987"
+	PA_ProneTurnLeftAnim="prone_turnL_1987"
 
     //intermission anims
-    PA_StandToProneAnim="StandtoProne_kar"
+    PA_StandToProneAnim="StandtoProne_1897"
     PA_CrouchToProneAnim="CrouchtoProne_1897"
     PA_ProneToStandAnim="PronetoStand_kar"
     PA_ProneToCrouchAnim="PronetoCrouch_kar"
@@ -184,13 +199,14 @@ defaultproperties
     PA_IdleIronRestAnim="stand_idleiron_1897"
     PA_IdleIronWeaponAnim="stand_idleiron_1897"
     PA_IdleCrouchIronWeaponAnim="crouch_idleiron_1897"
-    PA_ProneIdleRestAnim="prone_idle_1897"
+    PA_ProneIdleRestAnim="prone_idle_1897"  
+    PA_IdleProneAnim="prone_idle_1897"
 
     //shooting
-    PA_Fire="stand_shoothip_1897"
-    PA_IronFire="stand_shootiron_1897"
-    PA_CrouchFire="crouch_shoot_1897"
-    PA_ProneFire="prone_shoot_1897"
+    PA_Fire="stand_shoothip_kar"
+    PA_IronFire="stand_shootiron_kar"
+    PA_CrouchFire="crouch_shoot_kar"
+    PA_ProneFire="prone_shoot_kar"
 
     //moving shooting
     PA_MoveStandFire(0)="stand_shootFhip_1897"
