@@ -29,7 +29,7 @@ defaultproperties
     IronIdleAnim="Iron_idle"
     IronPutDown="iron_out"
     PostFireIdleAnim="Post_fire_idle"
-    PostFireIronIdleAnim="Post_fire_iron_idle"
+    PostFireIronIdleAnim="iron_shoot_idle"
     BoltHipAnim="Pump_action"
     BoltIronAnim="Iron_pump_action"
     PreReloadAnim="Reload_start"
