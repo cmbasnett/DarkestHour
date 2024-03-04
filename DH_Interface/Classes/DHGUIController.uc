@@ -446,4 +446,5 @@ defaultproperties
     MainMenuOptions(3)="DH_Interface.DHSettingsPage"
     MainMenuOptions(4)="DH_Interface.DHQuitPage"
     LCDLogo=Texture'DH_G15LCD.Logos.DH_BWLogoRGB8A'
+	QuestionMenuClass="DH_Interface.DHGUIQuestionPage"
 }
