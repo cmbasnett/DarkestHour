@@ -7,8 +7,6 @@ class DHConstructionSupplyAttachment extends Actor
     abstract
     notplaceable;
 
-#exec OBJ LOAD FILE=../StaticMeshes/DH_Construction_stc.usx
-
 var int                 SupplyPointIndex;
 var private float       SupplyCount;
 var int                 SupplyCountMax;
@@ -145,7 +143,7 @@ static function StaticMesh GetStaticMesh(LevelInfo Level, int TeamIndex)
 
     if (LI != none)
     {
-        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheStaticMesh;
+        return LI.GetTeamNationClass(TeamIndex).default.SupplyCacheClass.default.StaticMesh;
     }
 
     return none;

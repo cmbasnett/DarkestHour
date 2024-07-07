@@ -15,10 +15,9 @@ var Texture                     TeamSelectTexture;      // TODO: set this up on 
 
 var class<DHVoicePack>          VoicePackClass;
 
+// Constructions
 var class<DHConstruction>       PlatoonHQClass;
-
-// Supply Cache
-var StaticMesh                  SupplyCacheStaticMesh;
+var class<DHConstruction>       SupplyCacheClass;
 
 // Rally Point
 var StaticMesh                  RallyPointStaticMesh;
