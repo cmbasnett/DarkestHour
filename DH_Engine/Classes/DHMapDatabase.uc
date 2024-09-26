@@ -167,7 +167,7 @@ defaultproperties
     MapInfos(5)=(Name="DH-Caen_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(6)=(Name="DH-Carentan_Causeway_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(7)=(Name="DH-Carentan_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
-    MapInfos(8)=(Name="DH-Carpiquet_Airfield_Advance",AlliedNation=NATION_Britain,GameType=GAMETYPE_Advance,Size=SIZE_Large)
+    MapInfos(8)=(Name="DH-Carpiquet_Airfield_Advance",AlliedNation=NATION_Canada,GameType=GAMETYPE_Advance,Size=SIZE_Large)
     MapInfos(9)=(Name="DH-Cheneux_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
     MapInfos(10)=(Name="DH-Dead_Man's_Corner_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_ExtraSmall)
     MapInfos(11)=(Name="DH-Dog_Green_Push",AlliedNation=NATION_USA,GameType=GAMETYPE_Push,Size=SIZE_Medium)
@@ -327,4 +327,5 @@ defaultproperties
     MapInfos(165)=(Name="DH-Armored_Wacht_am_Rhein_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(166)=(Name="DH-Armored_La_Champagne_Advance",AlliedNation=NATION_Canada,GameType=GAMETYPE_Advance,Size=SIZE_Any)
     MapInfos(167)=(Name="DH-Armored_Yaryshivka_Domination",AlliedNation=NATION_USSR,GameType=GAMETYPE_Domination,Size=SIZE_Any)
+    MapInfos(168)=(Name="DH-Hattert_Advance",AlliedNation=NATION_USA,GameType=GAMETYPE_Advance,Size=SIZE_Large)
 }
