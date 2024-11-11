@@ -545,16 +545,28 @@ function bool CanFire()
     local bool bIsOnBinoculars;
     local bool bIsTransitioningFromPeriscope;
     local bool bIsTransitioningFromBinoculars;
+    local DHArmoredVehicle AV;
 
     bIsOnPeriscope = DriverPositionIndex == PeriscopePositionIndex;
     bIsOnBinoculars = DriverPositionIndex == BinocPositionIndex;
     bIsTransitioningFromPeriscope = IsInState('ViewTransition') && LastPositionIndex == PeriscopePositionIndex;
     bIsTransitioningFromBinoculars = IsInState('ViewTransition') && LastPositionIndex == BinocPositionIndex;
+    AV = DHArmoredVehicle(VehicleBase);
 
     if (!IsHumanControlled())
     {
         // Bots can always fire.
         return true;
+    }
+
+    if (AV != none && AV.bOnFire)
+    {
+        //If vehicle hull is on fire, gunner can no longer fire.
+        //if (P != none && (P.GetTeamNum() == VehicleTeam || !bTeamLocked))
+        //{
+            //DisplayVehicleMessage(5, P); // vehicle is on fire
+        //}
+        return false;
     }
 
     if (bIsOnPeriscope && !CanFireFromPeriscope())
